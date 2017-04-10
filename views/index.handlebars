@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+</head>
+						
+  <div class="row">
+    <div class="col-md-12">    
+      <div class="panel panel-success">
+        <div class="panel-heading">
+          <h3 class="panel-title panel-title-style"><center>Extra Extra Read All About It!</center></h3>
+        </div>
+        <div class="panel-body panel-style">
+          <table class="table article -table">
+            <tbody>
+              {{#each article}}
+          
+                  <tr>   
+                    <td>{{this.id}}.  {{this.article_title}} </td> 
+                    <td><form action="/update/{{this.id}}?_method=PUT" method="POST"> 
+                    <button type="submit" class="btn btn-primary btn-xs">Comment</button>
+                    </form></td>
+                  </tr>
+              
+              {{/each}}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>

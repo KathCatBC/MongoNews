@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/flatly/bootstrap.min.css">
+		<link rel="stylesheet" href="../../assets/css/style.css" type="text/css">
+		
+		<title></title>
+	</head>
+
+	<body>
+
+		<div class="container-fluid">        
+			<div class="headline"><h1><center>Eat-Da-Burger!</center></h1></div>
+			
+				
+			{{{ body }}}
+			<br>
+			<form action="/create" method="POST">
+
+				<center><span class="help-block order-style">Place your burger order here:</span></center>
+  				<center><input class="form-control" name="burgername" id="focusedInput" type="text" placeholder="Your burger order"></center><br>
+				<center><input class="btn btn-info center-align" type="submit"></center>
+
+			</form>			
+		</div>
+	</body>
+</html>

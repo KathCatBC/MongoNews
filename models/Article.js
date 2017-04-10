@@ -5,12 +5,16 @@ var mongoose = require("mongoose");
 var Schema = mongoose.Schema;
 
 // make a Schema
-var Articles = new Schema({
+var ArticleSchema = new Schema({
   title: {
     type: String
   },
   link: {
     type: String
+  },
+  note: {
+  	type: Schema.Types.ObjectId,
+  	ref: "Note"
   }
 });
 

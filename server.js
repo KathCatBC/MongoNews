@@ -89,18 +89,18 @@ app.get("/scrape", function(req, res) {
 
 // original
 
-``
+
 // This will get the articles we scraped from the mongoDB
-app.get("/articles", function(req, res) {
+app.get("/", function(req, res) {
   // Grab every doc in the Articles array
-  Article.find({}, function(error, doc) {
+  Article.find({}, function(error, data) {
     // Log any errors
     if (error) {
       console.log(error);
     }
     // Or send the doc to the browser as a json object
     else {
-      res.json(doc);
+      res.render("index", { articles: data})
     }
   });
 });

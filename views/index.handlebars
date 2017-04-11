@@ -14,10 +14,12 @@
               {{#each articles}}
           
                   <tr>   
-                    <td>{{this.id}}</td> 
-                    <td><form action="/update/{{this.id}}?_method=PUT" method="POST"> 
-                    <button type="submit" class="btn btn-primary btn-xs">Comment</button>
-                    </form></td>
+                    <td>{{this.title}} <br> {{this.link}}</td> 
+                    <td>
+                        <form action="/article/{{this.id}}" method="DELETE">
+                          <button type="submit" class="btn btn-primary btn-xs btn-del">Delete</button>
+                      </form> 
+                    </td>
                   </tr>
               
               {{/each}}

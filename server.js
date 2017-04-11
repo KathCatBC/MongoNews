@@ -35,7 +35,7 @@ app.engine("handlebars", exphbs({ defaultLayout: "main" }));
 app.set("view engine", "handlebars");
 
 // Database configuration with mongoose
-mongoose.connect("mongodb://localhost/week18day3mongoose");
+mongoose.connect("mongodb://localhost/mongonews");
 var db = mongoose.connection;
 
 // Show any mongoose errors
@@ -49,6 +49,8 @@ db.once("open", function() {
 });
 
 
+
+
 app.get("/scrape", function(req, res) {
   // First, we grab the body of the html with request
   request("http://www.nj.com/", function(error, response, html) {
@@ -59,15 +61,8 @@ app.get("/scrape", function(req, res) {
       // Add the text and href of every link, and save them as properties of the result object
       result.title = $(this).children().text();
       result.link = $(this).children().attr("href");
-      console.log(result.title)
-      // Using our Article model, create a new entry
-      // This effectively passes the result object to the entry (and the title and link)
       var entry = new Article(result);
 
-      /// need to check to see if it already exists
-
-
-      // Now, save that entry to the db
       entry.save(function(err, doc) {
         // Log any errors
         if (err) {
@@ -83,6 +78,16 @@ app.get("/scrape", function(req, res) {
   });
   // Tell the browser that we finished scraping the text
   res.send("Scrape Complete");
+
+  //   Article.find({}, function(error, data) {
+  //   if (error) {
+  //     console.log(error);
+  //   } else {
+  //     res.render("index", { articles: data})
+  //   }
+  // });
+
+
 });
 
 
@@ -125,6 +130,20 @@ app.get("/articles/:id", function(req, res) {
 });
 
 
+
+
+app.delete("/article/:id", function(req, res) {
+  console.log("app.delete   ID:  " + req.params.id)
+  Article.deleteOne({ "_id": req.params.id })
+  // Article.findByIdAndRemove({ "_id": req.params.id })
+  .exec(function(error, doc) {
+    // Log any errors
+    if (error) {
+      console.log(error);
+    }
+  });
+});
+
 // Create a new note or replace an existing note
 app.post("/articles/:id", function(req, res) {
   // Create a new note and pass the req.body to the entry
@@ -157,6 +176,6 @@ app.post("/articles/:id", function(req, res) {
 
 
 // Listen on port 3000
-app.listen(3000, function() {
-  console.log("App running on port 3000!");
+app.listen(3005, function() {
+  console.log("App running on port 3005!");
 });

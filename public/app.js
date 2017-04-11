@@ -1,12 +1,42 @@
+console.log("in app.js")
+debugger
 // Grab the articles as a json
-$.getJSON("/articles", function(data) {
-  // For each one
-  for (var i = 0; i < data.length; i++) {
-    // Display the apropos information on the page
-    $("#articles").append("<p data-id='" + data[i]._id + "'>" + data[i].title + "<br />" + data[i].link + "</p>");
-  }
+// $.getJSON("/articles", function(data) {
+//   // For each one
+//   for (var i = 0; i < data.length; i++) {
+//     // Display the apropos information on the page
+//     $("#articles").append("<p data-id='" + data[i]._id + "'>" + data[i].title + "<br />" + data[i].link + "</p>");
+//   }
+// });
+
+
+$(document).on("click", ".btn-scrape", function() {
+  console.log("clicked on more news")
+  $.ajax({
+    method: "GET",
+    url: "/scrape"
+  }).done(function(){
+   location.reload(true)
+  })
+  console.log("clicked on more news")
+
+
+
 });
 
+$(document).on("click", ".btn-del", function(){
+  console.log("delete?");
+
+  var thisId = $(this).attr("data-id");
+  console.log("What do I delete  -   /article/" + thisId);
+  $.ajax({
+    method: "DELETE",
+    url: "/article/" + thisId
+  })
+  .done(function(data){
+    console.log("deleted")
+  });
+})
 
 // Whenever someone clicks a p tag
 $(document).on("click", "p", function() {

@@ -11,34 +11,35 @@ debugger
 
 
 $(document).on("click", ".btn-scrape", function() {
-  console.log("clicked on more news")
+  console.log("clicked on more news");
   $.ajax({
     method: "GET",
     url: "/scrape"
-  }).done(function(){
-   location.reload(true)
+  }).done(function(response){
+      console.log("ajax result: " + response);
+      location.reload();
   })
-  console.log("clicked on more news")
-
-
-
+  console.log("clicked on more news");
 });
 
 
 $(document).on("click", ".btn-del", function(event){
   event.preventDefault();
-  console.log("delete?");
-    var thisId = $(this).data('id')
-  // var thisId = $(this).attr("data-id");
+  var thisId = $(this).data('id')
   console.log( thisId);
   $.ajax({
     method: "DELETE",
     url: "/article/" + thisId
-  })
-  .done(function(data){
-    console.log("deleted")
+  }).done(function(response){
+    console.log("response: " + response);
+
+    // console.log('data = '+ data)
+    // console.log("deleted")
+    // $(".btn-del")[0].submit();
+    // location.trigger('submit', [true]);
+    location.reload(true);    
   });
-})
+});
 
 // Whenever someone clicks a p tag
 $(document).on("click", ".btn-note", function() {
@@ -46,8 +47,8 @@ $(document).on("click", ".btn-note", function() {
   // Empty the notes from the note section
   $("#notes").empty();
   // Save the id from the p tag
-  var thisId = $(this).attr("data-id");
-    console.log("id = " + thisId)
+  var thisId = $(this).attr("id");
+    console.log("id = " + thisId);
   // Now make an ajax call for the Article
   $.ajax({
     method: "GET",

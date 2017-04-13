@@ -50,7 +50,7 @@ db.once("open", function() {
 
 
 
-
+// scrape with no checking for dupes
 app.get("/scrape", function(req, res) {
   // First, we grab the body of the html with request
   request("http://www.nj.com/", function(error, response, html) {
@@ -62,11 +62,8 @@ app.get("/scrape", function(req, res) {
       result.title = $(this).children().text();
       result.link = $(this).children().attr("href");
       var entry = new Article(result);
-        // get result.link 
-        // if result.link is not found then write to db
       if (true) { // this will be replace with the real logic 
           entry.save(function(err, doc) {
-        // Log any errors
             if (err) {
               console.log(err);
             } else {
@@ -79,21 +76,11 @@ app.get("/scrape", function(req, res) {
   // Tell the browser that we finished scraping the text
   res.send("Scrape Complete");
 
-  //   Article.find({}, function(error, data) {
-  //   if (error) {
-  //     console.log(error);
-  //   } else {
-  //     res.render("index", { articles: data})
-  //   }
-  // });
-
-
 });
 
 
 
 // original
-
 
 // This will get the articles we scraped from the mongoDB
 app.get("/", function(req, res) {
@@ -136,27 +123,13 @@ app.delete("/article/:id", function(req, res) {
   Article.findByIdAndRemove(req.params.id, function(err, done) {
       if(err) {
         console.log(err)
+        console.log('there was an error in delete')
       } else {
-        console.log(done)
+        console.log('done = '+ done);
       }
+    });
   });
-  
-});
 
-
-// app.delete("/article/:id", function(req, res) {
-//   console.log("app.delete   ID:  " + req.params.id)
-//   Article.deleteOne( { "_id": req.params.id } )
- 
-//   .exec(function(error, doc) {
-//     // Log any errors
-//     if (error) {
-//       console.log(error);
-//     } else {
-//       console.log("deleted? " + doc)
-//     }
-//   });
-// });
 
 // Create a new note or replace an existing note
 app.post("/articles/:id", function(req, res) {

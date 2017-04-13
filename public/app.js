@@ -24,11 +24,13 @@ $(document).on("click", ".btn-scrape", function() {
 
 });
 
-$(document).on("click", ".btn-del", function(){
-  console.log("delete?");
 
-  var thisId = $(this).attr("data-id");
-  console.log("What do I delete  -   /article/" + thisId);
+$(document).on("click", ".btn-del", function(event){
+  event.preventDefault();
+  console.log("delete?");
+    var thisId = $(this).data('id')
+  // var thisId = $(this).attr("data-id");
+  console.log( thisId);
   $.ajax({
     method: "DELETE",
     url: "/article/" + thisId
@@ -39,16 +41,17 @@ $(document).on("click", ".btn-del", function(){
 })
 
 // Whenever someone clicks a p tag
-$(document).on("click", "p", function() {
+$(document).on("click", ".btn-note", function() {
+  event.preventDefault();
   // Empty the notes from the note section
   $("#notes").empty();
   // Save the id from the p tag
   var thisId = $(this).attr("data-id");
-
+    console.log("id = " + thisId)
   // Now make an ajax call for the Article
   $.ajax({
     method: "GET",
-    url: "/articles/" + thisId
+    url: "/article/" + thisId
   })
     // With that done, add the note information to the page
     .done(function(data) {

@@ -62,18 +62,18 @@ app.get("/scrape", function(req, res) {
       result.title = $(this).children().text();
       result.link = $(this).children().attr("href");
       var entry = new Article(result);
-
-      entry.save(function(err, doc) {
+        // get result.link 
+        // if result.link is not found then write to db
+      if (true) { // this will be replace with the real logic 
+          entry.save(function(err, doc) {
         // Log any errors
-        if (err) {
-          console.log(err);
+            if (err) {
+              console.log(err);
+            } else {
+              console.log(doc);
+            } 
+          });
         }
-        // Or log the doc
-        else {
-          console.log(doc);
-        }
-      });
-
     });
   });
   // Tell the browser that we finished scraping the text
@@ -111,7 +111,8 @@ app.get("/", function(req, res) {
 });
 
 // Grab an article by it's ObjectId
-app.get("/articles/:id", function(req, res) {
+app.get("/article/:id", function(req, res) {
+  console.log(req.params)
   // Using the id passed in the id parameter, prepare a query that finds the matching one in our db...
   Article.findOne({ "_id": req.params.id })
   // ..and populate all of the notes associated with it
@@ -122,7 +123,6 @@ app.get("/articles/:id", function(req, res) {
     if (error) {
       console.log(error);
     }
-    // Otherwise, send the doc to the browser as a json object
     else {
       res.json(doc);
     }
@@ -130,19 +130,33 @@ app.get("/articles/:id", function(req, res) {
 });
 
 
-
-
 app.delete("/article/:id", function(req, res) {
   console.log("app.delete   ID:  " + req.params.id)
-  Article.deleteOne({ "_id": req.params.id })
-  // Article.findByIdAndRemove({ "_id": req.params.id })
-  .exec(function(error, doc) {
-    // Log any errors
-    if (error) {
-      console.log(error);
-    }
+
+  Article.findByIdAndRemove(req.params.id, function(err, done) {
+      if(err) {
+        console.log(err)
+      } else {
+        console.log(done)
+      }
   });
+  
 });
+
+
+// app.delete("/article/:id", function(req, res) {
+//   console.log("app.delete   ID:  " + req.params.id)
+//   Article.deleteOne( { "_id": req.params.id } )
+ 
+//   .exec(function(error, doc) {
+//     // Log any errors
+//     if (error) {
+//       console.log(error);
+//     } else {
+//       console.log("deleted? " + doc)
+//     }
+//   });
+// });
 
 // Create a new note or replace an existing note
 app.post("/articles/:id", function(req, res) {

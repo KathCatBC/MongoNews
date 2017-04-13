@@ -16,9 +16,12 @@
                   <tr>   
                     <td>{{this.title}} <br> {{this.link}}</td> 
                     <td>
-                        <form action="/article/{{this.id}}" method="DELETE">
-                          <button type="submit" class="btn btn-primary btn-xs btn-del">Delete</button>
+                      <form action="/article/{{this.id}}" method="DELETE">
+                          <button type="submit" class="btn btn-primary btn-xs btn-del" data-id="{{this.id}}">Delete</button>
                       </form> 
+               <!--        <form action="/article/{{this.id}}" method="GET">
+                        <button type="submit" class="btn btn-primary btn-xs" id="btn-note">Comment</button> -->
+                      </form>
                     </td>
                   </tr>
               

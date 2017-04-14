@@ -3,10 +3,10 @@
 </head>
 						
   <div class="row">
-    <div class="col-md-12">    
+    <div class="col-md-9">    
       <div class="panel panel-success">
         <div class="panel-heading">
-          <h3 class="panel-title panel-title-style"><center>Index</center></h3>
+          <h3 class="panel-title panel-title-style"><center>Articles</center></h3>
         </div>
         <div class="panel-body panel-style">
           <table class="table article -table">
@@ -20,7 +20,7 @@
                           <button type="input" class="btn btn-primary btn-xs btn-del" data-id="{{this.id}}">Delete</button>
                       </form> 
                       <form action="/article/{{this.id}}" method="GET">
-                        <button type="submit" class="btn btn-primary btn-xs" data-id="{{this.id}}" id="btn-note">Comment</button>
+                        <button type="submit" class="btn btn-primary btn-xs" data-id="{{this.id}}" id="btn-note">Comments</button>
                       </form>
                     </td>
                   </tr>
@@ -31,4 +31,38 @@
         </div>
       </div>
     </div>
+    
+
+    <div class="row">
+      <div class="col-md-3">    
+        <div class="panel panel-danger">
+          <div class="panel-heading">
+            <h3 class="panel-title panel-title-style"><center>Comments</center></h3>
+          </div>
+          <div class="panel-body panel-style" id="notes">
+            {{#each notes}}
+          
+                  <tr>   
+                    <td>{{this.title}} <br> {{this.body}}</td> 
+                    <td>
+                      <form action="/note/{{this.id}}" method="DELETE">
+                          <button type="input" class="btn btn-primary btn-xs btn-del-note" data-id="{{this.id}}">Delete</button>
+                      </form> 
+                     
+                    </td>
+                  </tr>
+              
+              {{/each}}
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+
+
+
+
+
   </div>

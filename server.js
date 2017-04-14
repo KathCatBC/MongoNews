@@ -62,7 +62,15 @@ app.get("/scrape", function(req, res) {
       result.title = $(this).children().text();
       result.link = $(this).children().attr("href");
       var entry = new Article(result);
-      if (true) { // this will be replace with the real logic 
+      console.log(result.link);
+
+        // Perform a simple find and return all the documents
+      Article.findOne({link:result.link}, {returnkey: true}, function(err, doc) {
+        console.log("err " + err);
+        console.log("doc " + doc);
+
+        if (doc == null) {
+          console.log("no match " + err)
           entry.save(function(err, doc) {
             if (err) {
               console.log(err);
@@ -70,15 +78,31 @@ app.get("/scrape", function(req, res) {
               console.log(doc);
             } 
           });
+        } else {
+          console.log("doc " + doc + " = match")
         }
+      });
+     // test.equal(null, err);
+     //  test.equal(null, doc.a); 
+     //  test.equal(2, doc.b);
+      
+      // if (articleSearch._id == undefined) { 
+      //     console.log("id not defined")
+      //     entry.save(function(err, doc) {
+      //       if (err) {
+      //         console.log(err);
+      //       } else {
+      //         console.log(doc);
+      //       } 
+      //     });
+      //     } else {
+      //       console.log(" false ")
+      //     }
+        });
     });
-  });
   // Tell the browser that we finished scraping the text
   res.send("Scrape Complete");
-
 });
-
-
 
 // original
 

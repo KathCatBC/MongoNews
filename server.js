@@ -5,9 +5,8 @@
 // Dependencies
 var express = require("express");
 var bodyParser = require("body-parser");
-var logger = require("morgan");
 var mongoose = require("mongoose");
-// Requiring our Note and Article models
+
 var Note = require("./models/Note.js");
 var Article = require("./models/Article.js");
 // Our scraping tools
@@ -21,7 +20,7 @@ mongoose.Promise = Promise;
 var app = express();
 
 // Use morgan and body parser with our app
-app.use(logger("dev"));
+
 app.use(bodyParser.urlencoded({
   extended: false
 }));
@@ -50,7 +49,7 @@ db.once("open", function() {
 
 
 
-// scrape with no checking for dupes
+
 app.get("/scrape", function(req, res) {
   // First, we grab the body of the html with request
   request("http://www.nj.com/", function(error, response, html) {
@@ -71,13 +70,16 @@ app.get("/scrape", function(req, res) {
           console.log("no match " + doc)
           entry.save(function(errSave, docSave) {
             if (err) {
-              console.log(errSave);
+              // console.log(errSave);
+              res.json(docSave)
             } else {
-              console.log(docSave);
+              res.json(docSave)  // works no error
+              // console.log(docSave);
             } 
           });
         } else {
-          console.log("doc " + doc + " = match");
+          res.json("doc " + doc + " = match");  // works no error
+          // console.log("doc " + doc + " = match"); 
         }
       });
   
@@ -88,7 +90,6 @@ app.get("/scrape", function(req, res) {
 
 });
 
-// original
 
 // This will get the articles we scraped from the mongoDB
 app.get("/", function(req, res) {
@@ -96,7 +97,7 @@ app.get("/", function(req, res) {
   Article.find({}, function(error, data) {
     // Log any errors
     if (error) {
-      console.log(error);
+      res.json(error);
     }
     // Or send the doc to the browser as a json object
     else {
@@ -129,7 +130,7 @@ app.get("/note/:articleid", function(req, res) {
   console.log("params" + req.params)
   Note.find({ "articlelink" : req.params.articleid}, function(error, data) {
     if (error) {
-      console.log("error: " + error);
+      res.render("error: " + error);
     } 
     else {
       console.log("data: " + data)
@@ -143,59 +144,87 @@ app.delete("/article/:id", function(req, res) {
 
   Article.findByIdAndRemove(req.params.id, function(err, done) {
       if(err) {
-        console.log(err)
+        res.json(err)
         console.log('there was an error in delete')
       } else {
-        console.log('done = '+ done);
+        res.json('done = '+ done);
       }
     });
   });
 
 
-app.get("/articles", function(req, res) {
-  // Grab every doc in the Articles array
-  Article.find({}, function(error, data) {
-    // Log any errors
-    if (error) {
-      console.log(error);
-    }
-    // Or send the doc to the browser as a json object
-    else {
-            res.render("index", {notes: data})
-      // res.json(data);
-    }
-  });
-});
+// app.get("/articles", function(req, res) {
+//   // Grab every doc in the Articles array
+//   Article.find({}, function(error, data) {
+//     // Log any errors
+//     if (error) {
+//       console.log(error);
+//     }
+//     // Or send the doc to the browser as a json object
+//     else {
+//             res.render("index", {notes: data})
+//       // res.json(data);
+//     }
+//   });
+// });
+
+
+// app.post("/note/:par/:title/:body", function(req, res){
+
+
+
+
+// //   db.inventory.insertOne(
+// //    { item: "canvas", qty: 100, tags: ["cotton"], size: { h: 28, w: 35.5, uom: "cm" } }
+// // )
+//     Note.insertOne({'title': req.params.title, 'body': req.params.body, 'articlelink': req.params.par}, {forceServerObjectId, true}, function(errSave, docSave){
+
+//     }) 
+     
+     
+//         if (errSave) {
+//           console.log(errSave);
+//         } else {
+//           console.log(docSave);
+//               // clear entry and show all comments
+//         } 
+     
+//     });
+
+
+ 
+
+
 
 // Create a new note or replace an existing note
-app.post("/article/:id", function(req, res) {
-  // Create a new note and pass the req.body to the entry
-  var newNote = new Note(req.body);
+// app.post("/article/:id", function(req, res) {
+//   // Create a new note and pass the req.body to the entry
+//   var newNote = new Note(req.body);
 
-  // And save the new note the db
-  newNote.save(function(error, doc) {
-    // Log any errors
-    if (error) {
-      console.log(error);
-    }
-    // Otherwise
-    else {
-      // Use the article id to find and update it's note
-      Article.findOneAndUpdate({ "_id": req.params.id }, { "note": doc._id })
-      // Execute the above query
-      .exec(function(err, doc) {
-        // Log any errors
-        if (err) {
-          console.log(err);
-        }
-        else {
-          // Or send the document to the browser
-          res.send(doc);
-        }
-      });
-    }
-  });
-});
+//   // And save the new note the db
+//   newNote.save(function(error, doc) {
+//     // Log any errors
+//     if (error) {
+//       console.log(error);
+//     }
+//     // Otherwise
+//     else {
+//       // Use the article id to find and update it's note
+//       Article.findOneAndUpdate({ "_id": req.params.id }, { "note": doc._id })
+//       // Execute the above query
+//       .exec(function(err, doc) {
+//         // Log any errors
+//         if (err) {
+//           console.log(err);
+//         }
+//         else {
+//           // Or send the document to the browser
+//           res.send(doc);
+//         }
+//       });
+//     }
+//   });
+// });
 
 
 // Listen on port 3000

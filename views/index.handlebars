@@ -16,12 +16,12 @@
                   <tr>   
                     <td>{{this.title}} <br> {{this.link}}</td> 
                     <td>
-                      <form action="/article/{{this.id}}" method="DELETE">
+                      <!-- <form action="/article/{{this.id}}" method="DELETE"> -->
                           <button type="input" class="btn btn-primary btn-xs btn-del" data-id="{{this.id}}">Delete</button>
-                      </form> 
-                      <form action="/article/{{this.id}}" method="GET">
+                     <!--  </form> 
+                      <form action="/note/{{this.id}}" method="GET"> -->
                         <button type="submit" class="btn btn-primary btn-xs" data-id="{{this.id}}" id="btn-note">Comments</button>
-                      </form>
+                      <!-- </form> -->
                     </td>
                   </tr>
               
@@ -38,6 +38,18 @@
         <div class="panel panel-danger">
           <div class="panel-heading">
             <h3 class="panel-title panel-title-style"><center>Comments</center></h3>
+          </div>
+          <div class="panel panel-default">
+            <div class="panel-body" id="comment-here">
+              <div class="form-group">
+                <input class="form-control" id="parentId" type="hidden">
+                <input class="form-control" id="commentTitle" type="text" placeholder="Title">
+                <textarea class="form-control" rows="3" id="commentBody" placeholder="Comment"></textarea>
+                <button type="input" class="btn btn-xs btn-info" id="savenote">Submit</button>
+              </div>
+            </div>
+            
+          </div>
           </div>
           <div class="panel-body panel-style" id="notes">
             {{#each notes}}

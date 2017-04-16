@@ -67,5 +67,6 @@ If your app deletes stories every time someone visits, your users won't be able 
 Helpful Links
 
 MongoDB Documentation
-Mongoose Documentation
-Cheerio Documentation
+
+URI
+mongolab-contoured-49399

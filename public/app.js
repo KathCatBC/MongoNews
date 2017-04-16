@@ -25,7 +25,7 @@ $(document).on("click", ".btn-del", function(event){
     url: "/article/" + thisId
   }).done(function(response){
     console.log("response: " + response);
-    location.reload();    
+    window.location.reload();    
   });
 });
 

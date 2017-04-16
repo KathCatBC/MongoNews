@@ -12,18 +12,18 @@ var Article = require("./models/Article.js");
 // Our scraping tools
 var request = require("request");
 var cheerio = require("cheerio");
-// Set mongoose to leverage built in JavaScript ES6 Promises
+
 mongoose.Promise = Promise;
 
-
-// Initialize Express
 var app = express();
 
 // Use morgan and body parser with our app
 
-app.use(bodyParser.urlencoded({
-  extended: false
-}));
+app.use(
+  bodyParser.urlencoded({
+    extended: false
+  })
+);
 
 // Make public a static dir
 app.use(express.static("public"));
@@ -49,47 +49,56 @@ db.once("open", function() {
 
 
 
+//***********************************
+// This will not reload the page, but does not cause an unhandled Error
+// Can't set headers after they are sent
 
 app.get("/scrape", function(req, res) {
-  // First, we grab the body of the html with request
+
+  var headlines = [];
   request("http://www.nj.com/", function(error, response, html) {
     var $ = cheerio.load(html);
+    if (error) {
+      return res.json(error)
+    }
     $(".fullheadline").each(function(i, element) {
       var result = {};
 
-      // Add the text and href of every link, and save them as properties of the result object
       result.title = $(this).children().text();
       result.link = $(this).children().attr("href");
       var entry = new Article(result);
       console.log(result.link);
+      headlines.push(result);
 
-        // Perform a simple find and return all the documents
-      Article.findOne({link:result.link}, {returnkey: true}, function(err, doc) {
-
+      Article.findOne({ link: result.link }, { returnkey: true }, function(
+        err,
+        doc
+      ) {
         if (doc == null) {
-          console.log("no match " + doc)
+          console.log("no match " + doc);
           entry.save(function(errSave, docSave) {
             if (err) {
-              // console.log(errSave);
-              res.json(docSave)
+              console.log(errSave);
+
             } else {
-              res.json(docSave)  // works no error
-              // console.log(docSave);
-            } 
+              console.log(docSave);
+            }
           });
         } else {
-          res.json("doc " + doc + " = match");  // works no error
-          // console.log("doc " + doc + " = match"); 
+          console.log("doc " + doc + " = match");
         }
       });
-  
-        });
     });
+
+      res.json(headlines);
+
+  });
   // Tell the browser that we finished scraping the text
-  res.send("Scrape Complete");
+
 
 });
 
+//***********************************
 
 // This will get the articles we scraped from the mongoDB
 app.get("/", function(req, res) {
@@ -98,60 +107,37 @@ app.get("/", function(req, res) {
     // Log any errors
     if (error) {
       res.json(error);
-    }
-    // Or send the doc to the browser as a json object
-    else {
-      res.render("index", { articles: data})
+    } else {
+      // Or send the doc to the browser as a json object
+      res.render("index", { articles: data });
     }
   });
 });
 
-// Grab an article by it's ObjectId
-// app.get("/article/:id", function(req, res) {
-//   console.log(req.params)
-//   // Using the id passed in the id parameter, prepare a query that finds the matching one in our db...
-//   Article.findOne({ "_id": req.params.id })
-//   // ..and populate all of the notes associated with it
-//   .populate("note")
-//   // now, execute our query
-//   .exec(function(error, doc) {
-//     // Log any errors
-//     if (error) {
-//       console.log(error);
-//     }
-//     else {
-//       res.json(doc);
-//     }
-//   });
-// });
-
-
 app.get("/note/:articleid", function(req, res) {
-  console.log("params" + req.params)
-  Note.find({ "articlelink" : req.params.articleid}, function(error, data) {
+  console.log("params" + req.params);
+  Note.find({ articlelink: req.params.articleid }, function(error, data) {
     if (error) {
-      res.render("error: " + error);
-    } 
-    else {
-      console.log("data: " + data)
-      res.render("index", {notes: data})
+      res.json("error: " + error);
+    } else {
+      console.log("data: " + data);
+      res.render("index", { notes: data });
     }
   });
 });
 
 app.delete("/article/:id", function(req, res) {
-  console.log("app.delete   ID:  " + req.params.id)
+  console.log("app.delete   ID:  " + req.params.id);
 
   Article.findByIdAndRemove(req.params.id, function(err, done) {
-      if(err) {
-        res.json(err)
-        console.log('there was an error in delete')
-      } else {
-        res.json('done = '+ done);
-      }
-    });
+    if (err) {
+      res.json(err);
+      console.log("there was an error in delete");
+    } else {
+      res.json("done = " + done);
+    }
   });
-
+});
 
 // app.get("/articles", function(req, res) {
 //   // Grab every doc in the Articles array
@@ -168,33 +154,24 @@ app.delete("/article/:id", function(req, res) {
 //   });
 // });
 
+app.post("/note/:par/:title/:body", function(req, res) {
+  console.log("post new note");
+  var newNote = {};
 
-// app.post("/note/:par/:title/:body", function(req, res){
+  newNote.title = req.params.title;
+  newNote.body = req.params.body;
+  newNote.articlelink = req.param.par;
 
+  var entry = new Note(newNote);
 
-
-
-// //   db.inventory.insertOne(
-// //    { item: "canvas", qty: 100, tags: ["cotton"], size: { h: 28, w: 35.5, uom: "cm" } }
-// // )
-//     Note.insertOne({'title': req.params.title, 'body': req.params.body, 'articlelink': req.params.par}, {forceServerObjectId, true}, function(errSave, docSave){
-
-//     }) 
-     
-     
-//         if (errSave) {
-//           console.log(errSave);
-//         } else {
-//           console.log(docSave);
-//               // clear entry and show all comments
-//         } 
-     
-//     });
-
-
- 
-
-
+  entry.save(function(errSave, docSave) {
+    if (errSave) {
+      res.json(errSave);
+    } else {
+      res.json(docSave);
+    }
+  });
+});
 
 // Create a new note or replace an existing note
 // app.post("/article/:id", function(req, res) {
@@ -225,7 +202,6 @@ app.delete("/article/:id", function(req, res) {
 //     }
 //   });
 // });
-
 
 // Listen on port 3000
 app.listen(3005, function() {

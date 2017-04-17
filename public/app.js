@@ -43,13 +43,12 @@ $(document).on("click", "#btn-note", function() {
     url: "/note/" + parentsearchId
   }).done(function(data){
 
-
           $(".comment").text(""); // empty table from previous request
           for (i=0; i<data.length; i++) {
             title = data[i].title;
             body = data[i].body;
 
-            $(".comment").append(title + " - " + body );
+            $(".comment").append(title + "<br>" + body +"<br><br>");
 
           }          
           

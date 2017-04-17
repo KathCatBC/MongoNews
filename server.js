@@ -17,8 +17,6 @@ mongoose.Promise = Promise;
 
 var app = express();
 
-// Use morgan and body parser with our app
-
 app.use(
   bodyParser.urlencoded({
     extended: false
@@ -55,12 +53,11 @@ db.once("open", function() {
 
 app.get("/scrape", function(req, res) {
 
-  var headlines = [];
+  // var headlines = [];
+  var artCounter = 0;
   request("http://www.nj.com/", function(error, response, html) {
     var $ = cheerio.load(html);
-    if (error) {
-      return res.json(error)
-    }
+    
     $(".fullheadline").each(function(i, element) {
       var result = {};
 
@@ -68,7 +65,7 @@ app.get("/scrape", function(req, res) {
       result.link = $(this).children().attr("href");
       var entry = new Article(result);
       console.log(result.link);
-      headlines.push(result);
+      // headlines.push(result);
 
       Article.findOne({ link: result.link }, { returnkey: true }, function(
         err,
@@ -82,6 +79,7 @@ app.get("/scrape", function(req, res) {
 
             } else {
               console.log(docSave);
+              artCounter ++
             }
           });
         } else {
@@ -90,15 +88,15 @@ app.get("/scrape", function(req, res) {
       });
     });
 
-      res.json(headlines);
 
   });
   // Tell the browser that we finished scraping the text
+   return res.json(artCounter);
+
 
 
 });
 
-//***********************************
 
 // This will get the articles we scraped from the mongoDB
 app.get("/", function(req, res) {
@@ -114,17 +112,20 @@ app.get("/", function(req, res) {
   });
 });
 
+
 app.get("/note/:articleid", function(req, res) {
-  console.log("params" + req.params);
-  Note.find({ articlelink: req.params.articleid }, function(error, data) {
+  console.log("params" + req.params.articleid);
+
+  Note.find({ article: req.params.articleid }, function(error, data) {
     if (error) {
       res.json("error: " + error);
     } else {
-      console.log("data: " + data);
-      res.render("index", { notes: data });
+
+    res.json(data)
     }
   });
 });
+
 
 app.delete("/article/:id", function(req, res) {
   console.log("app.delete   ID:  " + req.params.id);
@@ -139,28 +140,16 @@ app.delete("/article/:id", function(req, res) {
   });
 });
 
-// app.get("/articles", function(req, res) {
-//   // Grab every doc in the Articles array
-//   Article.find({}, function(error, data) {
-//     // Log any errors
-//     if (error) {
-//       console.log(error);
-//     }
-//     // Or send the doc to the browser as a json object
-//     else {
-//             res.render("index", {notes: data})
-//       // res.json(data);
-//     }
-//   });
-// });
 
 app.post("/note/:par/:title/:body", function(req, res) {
   console.log("post new note");
+  console.log()
+
   var newNote = {};
 
   newNote.title = req.params.title;
   newNote.body = req.params.body;
-  newNote.articlelink = req.param.par;
+  newNote.article = req.params.par;
 
   var entry = new Note(newNote);
 
@@ -173,35 +162,7 @@ app.post("/note/:par/:title/:body", function(req, res) {
   });
 });
 
-// Create a new note or replace an existing note
-// app.post("/article/:id", function(req, res) {
-//   // Create a new note and pass the req.body to the entry
-//   var newNote = new Note(req.body);
 
-//   // And save the new note the db
-//   newNote.save(function(error, doc) {
-//     // Log any errors
-//     if (error) {
-//       console.log(error);
-//     }
-//     // Otherwise
-//     else {
-//       // Use the article id to find and update it's note
-//       Article.findOneAndUpdate({ "_id": req.params.id }, { "note": doc._id })
-//       // Execute the above query
-//       .exec(function(err, doc) {
-//         // Log any errors
-//         if (err) {
-//           console.log(err);
-//         }
-//         else {
-//           // Or send the document to the browser
-//           res.send(doc);
-//         }
-//       });
-//     }
-//   });
-// });
 
 // Listen on port 3000
 app.listen(3005, function() {

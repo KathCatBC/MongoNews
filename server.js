@@ -32,7 +32,14 @@ app.engine("handlebars", exphbs({ defaultLayout: "main" }));
 app.set("view engine", "handlebars");
 
 // Database configuration with mongoose
-mongoose.connect("mongodb://localhost/mongonews");
+
+//local
+// mongoose.connect("mongodb://localhost/mongonews");
+
+
+//server
+mongoose.connect("mongolab-contoured-49399");
+
 var db = mongoose.connection;
 
 // Show any mongoose errors

@@ -38,7 +38,7 @@ app.set("view engine", "handlebars");
 
 
 //server
-mongoose.connect("mongolab-contoured-49399");
+mongoose.connect(mongolab-contoured-49399);
 
 var db = mongoose.connection;
 

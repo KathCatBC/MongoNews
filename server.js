@@ -35,11 +35,6 @@ app.set("view engine", "handlebars");
 var PORT = process.env.PORT || 3001;
 
 
-//local
-mongoose.connect(MONGODB_URI);
-
-
-
 //server
 process.env.MONGODB_URI = 'mongodb://heroku_zxc81h22:33c4ht2ilg9gcm1b3c8h4rpt9tc@ds161640.mlab.com:61640/heroku_zxc81h22';
 
@@ -48,7 +43,9 @@ var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/mongonews";
 
 mongoose.connect(MONGODB_URI);
 
-var db = mongoose.connection;
+db = mongoose.createConnection(MONGODB_URI);
+
+
 
 
 

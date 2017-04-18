@@ -1,8 +1,3 @@
-/* Showing Mongoose's "Populated" Method (18.3.8)
- * INSTRUCTOR ONLY
- * =============================================== */
-
-
 
 // Dependencies
 var express = require("express");
@@ -14,6 +9,7 @@ var Article = require("./models/Article.js");
 // Our scraping tools
 var request = require("request");
 var cheerio = require("cheerio");
+
 
 mongoose.Promise = Promise;
 
@@ -35,14 +31,25 @@ app.set("view engine", "handlebars");
 
 // Database configuration with mongoose
 
+var PORT = process.env.PORT || 3001;
+
+
 //local
-// mongoose.connect("mongodb://localhost/mongonews");
+mongoose.connect(MONGODB_URI);
+
 
 
 //server
-// mongoose.connect('mongodb://heroku_zxc81h22:33c4ht2ilg9gcm1b3c8h4rpt9tc@ds161640.mlab.com:61640/heroku_zxc81h22');
+// process.env.MONGODB_URI = 'mongodb://heroku_zxc81h22:33c4ht2ilg9gcm1b3c8h4rpt9tc@ds161640.mlab.com:61640/heroku_zxc81h22';
+
+var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/mongonews";
+
+
+mongoose.connect(MONGODB_URI);
 
 var db = mongoose.connection;
+
+
 
 // Show any mongoose errors
 db.on("error", function(error) {

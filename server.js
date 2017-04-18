@@ -1,6 +1,4 @@
-/* Showing Mongoose's "Populated" Method (18.3.8)
- * INSTRUCTOR ONLY
- * =============================================== */
+
 
 // Dependencies
 var express = require("express");
@@ -12,6 +10,7 @@ var Article = require("./models/Article.js");
 // Our scraping tools
 var request = require("request");
 var cheerio = require("cheerio");
+
 
 mongoose.Promise = Promise;
 
@@ -33,14 +32,20 @@ app.set("view engine", "handlebars");
 
 // Database configuration with mongoose
 
+var PORT = process.env.PORT || 3001;
+
+
 //local
 // mongoose.connect("mongodb://localhost/mongonews");
+
 
 
 //server
 mongoose.connect('mongodb://heroku_zxc81h22:33c4ht2ilg9gcm1b3c8h4rpt9tc@ds161640.mlab.com:61640/heroku_zxc81h22');
 
 var db = mongoose.connection;
+
+
 
 // Show any mongoose errors
 db.on("error", function(error) {
@@ -172,6 +177,6 @@ app.post("/note/:par/:title/:body", function(req, res) {
 
 
 // Listen on port 3000
-app.listen(3005, function() {
-  console.log("App running on port 3005!");
+app.listen(PORT, function() {
+ console.log('🌎 ==> Now listening on PORT %s! Visit http://localhost:%s in your browser!', PORT, PORT);
 });

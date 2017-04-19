@@ -44,7 +44,7 @@ var PORT = process.env.PORT || 3001;
 var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/mongonews";
 
 
-// mongoose.connect(MONGODB_URI);
+mongoose.connect(MONGODB_URI);
 
 // var db = mongoose.connection;
 

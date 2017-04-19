@@ -35,7 +35,6 @@ var PORT = process.env.PORT || 3001;
 
 
 //local
-mongoose.connect(MONGODB_URI);
 
 
 

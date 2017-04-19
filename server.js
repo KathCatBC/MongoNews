@@ -180,6 +180,6 @@ app.post("/note/:par/:title/:body", function(req, res) {
 
 
 // Listen on port 3000
-app.listen(3005, function() {
-  console.log("App running on port 3005!");
+app.listen(PORT, function() {
+  console.log("App running on port" + PORT);
 });

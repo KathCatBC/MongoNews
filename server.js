@@ -46,9 +46,9 @@ var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/mongonews";
 
 mongoose.connect(MONGODB_URI);
 
-var db = mongoose.connection;
+// var db = mongoose.connection;
 
-
+db = mongoose.createConnection();
 
 // Show any mongoose errors
 db.on("error", function(error) {
